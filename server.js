@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger_output.json')
 require('dotenv/config');
 
 const app = express();
@@ -15,5 +17,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
     res.send('Bienvenu sur la messagerie omnicanale !')
 })
+
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 require('./routes')(app);

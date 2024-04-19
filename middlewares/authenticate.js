@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const authenticate = async (req, res, next) => {
     const credentials = basicAuth(req);
     if (!credentials) {
-        return res.status(401).send("L'authentification est requise");
+        return res.status(401).send({ message: "L'authentification est requise"});
     }
 
     const name = credentials.name;
@@ -13,16 +13,16 @@ const authenticate = async (req, res, next) => {
     const user = await User.findOne({ where: { name }});
 
     if (!user) {
-        return res.status(401).send("Aucun n'utilisateur trouvé. Veuillez revoir le nom");
+        return res.status(401).send({ message: "Aucun n'utilisateur trouvé. Veuillez revoir le nom"});
     }
 
     if (!bcrypt.compareSync(password, user.password))  {
-        return res.status(401).send("Le mot de passe renseigné est incorrect");
+        return res.status(401).send({ message: "Le mot de passe renseigné est incorrect"});
     }
+
+    req.user = user
 
     next();
 };
 
-module.exports = {
-    authenticate
-}
+module.exports = { authenticate }
